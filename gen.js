@@ -1,3 +1,5 @@
+const { matrix } = require("./util");
+
 const wool = new Array(4).fill("W");
 const brick = new Array(3).fill("B");
 const desert = new Array(1).fill("D");
@@ -19,7 +21,7 @@ const shuffle = (arr, shuffled = []) => {
 };
 
 // returns a zero matrix of given width and height
-const matrix = (w, h) => new Array(h).fill(0).map((x) => new Array(w).fill(0));
+// const matrix = (w, h) => new Array(h).fill(0).map((x) => new Array(w).fill(0));
 
 const hexes = matrix(5, 5)
   .map((x, i) => x.map((y, j) => (y = { x: i, y: j })))
