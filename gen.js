@@ -1,4 +1,4 @@
-const { matrix } = require("./util");
+const { matrix, unflat } = require("./util");
 
 const wool = new Array(4).fill("W");
 const brick = new Array(3).fill("B");
@@ -6,9 +6,6 @@ const desert = new Array(1).fill("D");
 const lumber = new Array(4).fill("L");
 const grain = new Array(4).fill("G");
 const ore = new Array(3).fill("O");
-
-const tiles = [...desert, ...lumber, ...grain, ...brick, ...wool, ...ore];
-const values = [2, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 12];
 
 // shuffles and returns copy of array
 const shuffle = (arr, shuffled = []) => {
@@ -20,42 +17,48 @@ const shuffle = (arr, shuffled = []) => {
   );
 };
 
-// returns a zero matrix of given width and height
-// const matrix = (w, h) => new Array(h).fill(0).map((x) => new Array(w).fill(0));
+const resources = [...desert, ...lumber, ...grain, ...brick, ...wool, ...ore];
+const values = [2, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 12];
 
-const hexes = matrix(5, 5)
-  .map((x, i) => x.map((y, j) => (y = { x: i, y: j })))
-  .flat()
-  .filter((hex) => hex.x + hex.y > 1 && hex.x + hex.y < 7);
+const map = matrix(5, 5).map((x, i) =>
+  x.map((_, j) => (i + j > 1 && i + j < 7 ? [i, j] : [0, 0]))
+);
 
-// randomly assigns resources types to each hex
-const addTypes = (hexes) => {
-  const shuffledTiles = shuffle(tiles);
-  return hexes.map((hex, i) => ({
-    ...hex,
-    type: shuffledTiles[i],
-  }));
+// Tuples are the coordinate offsets for every
+// neighboring hex
+const edge = [
+  [0, -1],
+  [1, -1],
+  [1, 0],
+  [0, 1],
+  [-1, 1],
+  [-1, 0],
+];
+
+// Each vertex in a hex defined by two edges
+const vertex = [
+  [edge[0], edge[1]],
+  [edge[1], edge[2]],
+  [edge[2], edge[3]],
+  [edge[3], edge[4]],
+  [edge[5], edge[6]],
+  [edge[6], edge[1]],
+];
+
+// Returns the hex's neighbor on given edge
+const neighbor = (hex, edge, map) => {
+  const [x, y] = hex;
+  const [i, j] = edge;
+  return map[x + i][y + j];
 };
 
-// randomly assigns values to each hex
-const addValues = (hexes) => {
-  const shuffledValues = shuffle(values);
-  const desertHex = hexes.filter((hex) => hex.type === "D")[0];
-  return hexes
-    .filter((hex) => hex.type !== "D")
-    .map((hex, i) => ({ ...hex, value: shuffledValues[i] }))
-    .concat([{ ...desertHex, value: 0 }]);
-};
+// Returns array of given hex and two neighbors
+// that share the same given vertex
+const position = (hex, vertex, map) => [
+  hex,
+  neighbor(hex, vertex[0], map),
+  neighbor(hex, vertex[1], map),
+];
 
-// returns all the neighboring hexes of the given hex
-const getNeighbors = (hex) =>
-  hexes.filter(
-    (hex_) =>
-      hex_.x <= hex.x + 1 &&
-      hex_.x >= hex.x - 1 &&
-      hex_.y <= hex.y + 1 &&
-      hex_.y >= hex.y - 1 &&
-      hex_.x - hex.x !== hex_.y - hex.y
-  );
-
-console.log(addValues(addTypes(hexes)));
+console.log(map.flat());
+console.log(unflat(5, 5, map.flat()));
