@@ -104,6 +104,4 @@ const genRandomMap = () =>
     )
   );
 
-console.log(genRandomMap());
-
 module.exports = { genRandomMap };
