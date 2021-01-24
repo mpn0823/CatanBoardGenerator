@@ -90,10 +90,20 @@ const applyItems = (items, field, hexes) => {
 //   return map[x][y].type === neighbor(hex, edge, map).type;
 // };
 
-const temp = applyItems(
-  shuffle(values),
-  "value",
-  applyItems(shuffle(resources), "type", map.flat())
-);
+// Maybe Ramda could help make this more readable?
+// Returns a 5x5 matrix of hex objects representing
+// a random Catan map.
+const genRandomMap = () =>
+  unflat(
+    5,
+    5,
+    applyItems(
+      shuffle(values),
+      "value",
+      applyItems(shuffle(resources), "type", map.flat())
+    )
+  );
 
-console.log(unflat(5, 5, temp));
+console.log(genRandomMap());
+
+module.exports = { genRandomMap };
