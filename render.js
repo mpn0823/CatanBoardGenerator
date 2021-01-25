@@ -26,7 +26,7 @@ const render = (m) => {
 // changes element at (x,y) in graphics matrix to color
 // corresponding to given code
 const color = (x, y, code) => {
-  buffer[x][y] = `\u001b[${code}m${buffer[x][y]}\u001b[0m`;
+  buffer[x][y] = `\u001b[${code};1m${buffer[x][y]}\u001b[0m`;
 };
 // colors rectangular region defined by A and B where
 // A is the coordinates of the top left element of the
@@ -82,19 +82,19 @@ const axialCoordinates = [
 ];
 
 const colorCodes = {
-  W: 47,
-  B: 41,
-  D: 46,
-  L: 42,
-  G: 43,
-  O: 40,
+  W: 48, // wool    white
+  B: 48, // bricks  red
+  D: 46, // desert  cyan
+  L: 48, // lumber  green
+  G: 48, // grain   yellow
+  O: 48, // ore     black
 };
 
 const flatmap = genRandomMap().flat();
 
 const flatbuffer = buffer.flat();
 
-const updateBuffer = (map, buffer) => {
+const drawValues = (map, buffer) => {
   map = map.flat().filter((hex) => hex.type !== "X");
   for (i = 0; i < 10; i++) {
     for (j = 0; j < 21; j++) {
@@ -104,12 +104,24 @@ const updateBuffer = (map, buffer) => {
       }
     }
   }
-  console.log(buffer.flat());
+
   return buffer;
 };
 
 const map = genRandomMap();
-const foo = updateBuffer(map, buffer);
-render(foo);
+buffer = drawValues(map, buffer);
 
 // Adding ANSI color codes changes buffer dimensions
+
+const foo = () => {
+  hexRefs.forEach((ref, i) => {
+    const [x, y] = axialCoordinates[i];
+    const { type } = map[x][y];
+    const code = colorCodes[type];
+    colorHex(ref, code);
+  });
+};
+
+foo();
+render(buffer);
+console.log(map);
