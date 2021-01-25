@@ -3,16 +3,17 @@ const { genRandomMap } = require("./gen");
 
 let buffer = matrix(21, 10);
 
-buffer[0] = [..."        / V \\        "];
-buffer[1] = [..."    / V \\   / V \\    "];
-buffer[2] = [..."/ V \\   / V \\   / V \\"];
-buffer[3] = [..."\\   / V \\   / V \\   /"];
-buffer[4] = [..."/ V \\   / V \\   / V \\"];
-buffer[5] = [..."\\   / V \\   / V \\   /"];
-buffer[6] = [..."/ V \\   / V \\   / V \\"];
-buffer[7] = [..."\\   / V \\   / V \\   /"];
-buffer[8] = [..."    \\   / V \\   /    "];
-buffer[9] = [..."        \\   /        "];
+buffer[0] = [..."        _V            "];
+buffer[1] = [..."     __/ #\\__        "];
+buffer[2] = [..."   >/ #\\__/ #\\<     "];
+buffer[3] = [..." / #\\__/ #\\__/ #\\  "];
+buffer[4] = [..." \\__/ #\\__/ #\\__/  "];
+buffer[5] = [...">/ #\\__/ #\\__/ #\\< "];
+buffer[6] = [..." \\__/ #\\__/ #\\__/  "];
+buffer[7] = [..." / #\\__/ #\\__/ #\\  "];
+buffer[8] = [...">\\__/ #\\__/ #\\__/< "];
+buffer[9] = [..."    \\__/ #\\__/      "];
+buffer[10] = [..."     ^ \\__/ ^       "];
 
 // We need to map the 5x5 array representing a Catan
 // map to our ASCII graphics buffer m
@@ -109,7 +110,7 @@ const drawValues = (map, buffer) => {
 };
 
 const map = genRandomMap();
-buffer = drawValues(map, buffer);
+// buffer = drawValues(map, buffer);
 
 // Adding ANSI color codes changes buffer dimensions
 
@@ -122,6 +123,4 @@ const foo = () => {
   });
 };
 
-foo();
 render(buffer);
-console.log(map);

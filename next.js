@@ -42,8 +42,3 @@ const printMatrix = (m) => {
   console.log(m[0].map((x) => x.toString(16).toUpperCase()));
   printMatrix(m.slice(1));
 };
-
-const resLayer = randResLayer();
-const valLayer = randValLayer(resLayer);
-printMatrix(resLayer);
-printMatrix(valLayer);
